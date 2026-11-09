@@ -1,0 +1,9 @@
+# Downloaded public data stays untracked; re-fetch with `python -m src.download`.
+data/
+# Smoke-run outputs are for quick inspection only.
+figures/smoke/
+results/*_smoke*
+results/predictions_smoke/
+__pycache__/
+.pytest_cache/
+.venv/
