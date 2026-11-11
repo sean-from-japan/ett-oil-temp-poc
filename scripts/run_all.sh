@@ -12,4 +12,5 @@ python3 -m venv .venv
 pip install -r requirements.txt
 python -m src.cli download
 python -m src.cli run "$MODE"
+python -m src.monitoring
 python -m pytest tests/ -q

@@ -5,12 +5,20 @@
 - 報告スライド（PDF）: [`docs/ETT_PoC_report.pdf`](docs/ETT_PoC_report.pdf)
 - 実装: `src/`、テスト: `tests/`、実行結果: `results/`、図: `figures/`
 
+## 結果の要点
+
+- 持続予測を確かに上回ったのは ETTh2 の 1 時間先だけでした。Ridge で test MAE が 0.84 から 0.49 に下がり、誤差の 99% が収まる幅は ±3.8 から ±1.9 に半減しました。
+- 24・96 時間先では、持続予測を安定して上回るモデルはありませんでした。96 時間先は、validation で選んだモデルが冬の test で悪化しました。
+- 予測先の時刻 T の負荷を足しても、誤差はほとんど変わりませんでした。
+
+![test MAE の比較（予測先の時刻の負荷を使う条件）](figures/compare_test_mae_loadT.png)
+
 ## 実行方法
 
-CPU のみで動きます（GPU・有料 API は使いません）。
+Python 3.12 と CPU だけで動きます。GPU や有料 API は使いません。全体の実行は約 3 分です。
 
 ```bash
-bash scripts/run_all.sh          # 環境作成 → データ取得 → 全体実行 → テスト（数分）
+bash scripts/run_all.sh          # 環境作成 → データ取得 → 全体実行 → テスト（約 3 分）
 bash scripts/run_all.sh --smoke  # 縮小版（ETTh1, h=24 のみ）
 ```
 
@@ -20,6 +28,7 @@ bash scripts/run_all.sh --smoke  # 縮小版（ETTh1, h=24 のみ）
 pip install -r requirements.txt
 python -m src.cli download      # 公式リポジトリから取得し、SHA256 を表示
 python -m src.cli run --full    # results/ と figures/ を出力
+python -m src.monitoring        # 1 時間先の監視の幅を results/monitoring_band.csv に出力
 python -m pytest tests/ -q
 ```
 
@@ -69,9 +78,10 @@ src/nowcast.py       同時刻回帰とドリフトの診断
 src/evaluate.py      MAE / RMSE、改善率、高油温サブセット、誤差の大きい例
 src/uncertainty.py   ブロック・ブートストラップ区間と月別 MAE
 src/pipeline.py      全体の実行、図と結果の出力
+src/monitoring.py    1 時間先の誤差の 99% 点と、誤差が 2 を超えた時間数
 src/cli.py           download / run --full / run --smoke
 tests/               時刻の整合、未来情報の混入（値を書き換えて確認）、分割、出力の検証
-results/             benchmark_results.{csv,json}、predictions/、区間、run_manifest.json
+results/             benchmark_results.{csv,json}、predictions/、区間、monitoring_band.csv、run_manifest.json
 figures/             EDA、相関、test MAE の比較、残差
 docs/                報告スライド（PDF）
 ```

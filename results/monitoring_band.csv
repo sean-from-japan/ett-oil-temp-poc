@@ -1,0 +1,5 @@
+dataset,horizon,model,abs_err_q99,hours_abs_err_over_2,n
+ETTh1,1,persistence,1.899,21,2879
+ETTh1,1,ridge,1.801,15,2879
+ETTh2,1,persistence,3.784,288,2879
+ETTh2,1,ridge,1.881,20,2879
